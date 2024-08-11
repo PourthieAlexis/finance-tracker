@@ -14,7 +14,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
   transactions,
 }) => {
   return (
-    <div className="overflow-x-auto bg-neutral rounded-box col-span-2">
+    <div className="overflow-x-auto bg-neutral rounded-box col-span-2 w-full">
       <table className="table">
         <thead>
           <tr>
