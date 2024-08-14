@@ -8,14 +8,17 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:studio": "dotenv -e .env.local -- npx prisma studio ",
-    "push:mysql": "dotenv -e .env.local -- npx prisma generate ",
+    "push:mysql": "dotenv -e .env.local -- npx prisma db push ",
     "migrate:mysql": "dotenv -e .env.local -- npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
+    "chart.js": "^4.4.3",
     "next": "14.2.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",

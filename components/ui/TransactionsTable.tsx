@@ -1,18 +1,9 @@
+import { getTransactionsTable } from "@/app/actions/transaction.actions";
 import React from "react";
 
-interface Transaction {
-  subject: string;
-  context: string;
-  amount: number;
-}
+const TransactionsTable: React.FC = async () => {
+  const transactions = await getTransactionsTable();
 
-interface TransactionsTableProps {
-  transactions: Transaction[];
-}
-
-const TransactionsTable: React.FC<TransactionsTableProps> = ({
-  transactions,
-}) => {
   return (
     <div className="overflow-x-auto bg-neutral rounded-box col-span-2 w-full">
       <table className="table">
@@ -26,11 +17,16 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
         <tbody>
           {transactions.map((transaction, index) => (
             <tr key={index}>
-              <td>{transaction.subject}</td>
+              <td>{transaction.transaction_type}</td>
               <td>
-                <span className="badge">{transaction.context}</span>
+                <span className="badge">{transaction.category}</span>
               </td>
-              <td>{transaction.amount}€</td>
+              <td>
+                {transaction.transaction_type === "EXPENSE"
+                  ? `-${transaction.amount}`
+                  : `+${transaction.amount}`}
+                €
+              </td>
             </tr>
           ))}
         </tbody>

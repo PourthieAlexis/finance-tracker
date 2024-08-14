@@ -1,39 +1,49 @@
-import React from 'react';
+import { getBudget } from "@/app/actions/budget.actions";
+import React from "react";
 
-interface MonthlyBudgetProps {
-  budgetAmount: number;
-  spentAmount: number;
-  startDate: string;  // format: 'YYYY-MM-DD'
-  endDate: string;    // format: 'YYYY-MM-DD'
-}
+const MonthlyBudget: React.FC = async () => {
+  const budget = await getBudget("7008acf8-fc0d-46d8-847e-09ac449bddc3");
 
-const MonthlyBudget: React.FC<MonthlyBudgetProps> = ({ budgetAmount, spentAmount, startDate, endDate }) => {
-  const percentageUsed = (spentAmount / budgetAmount) * 100;
+  if (!budget) {
+    return (
+      <div className="stats shadow bg-neutral p-4 flex flex-col">
+        <div className="stat flex-1 p-2">
+          <div className="stat-title text-white">Budget Mensuel</div>
+          <div className="stat-value text-sm">Aucun budget pour ce mois</div>
+        </div>
+      </div>
+    );
+  }
+
+  const percentageUsed = (budget.totalSpent / budget.amount) * 100;
 
   return (
-    <div className="stats shadow bg-neutral p-4 flex flex-col flex-row">
+    <div className="stats shadow bg-neutral p-4 flex flex-col">
       <div className="stat flex-1 p-2">
         <div className="stat-title text-white">Budget Mensuel</div>
-        <div className="stat-value text-primary">{budgetAmount.toLocaleString()}€</div>
+        <div className="stat-value text-primary">{budget.amount}€</div>
         <div className="text-white">
           <div className="stat-desc">
-            Début : {new Date(startDate).toLocaleDateString()}
+            Début : {budget.start_date.toLocaleDateString()}
           </div>
           <div className="stat-desc">
-            Fin : {new Date(endDate).toLocaleDateString()}
+            Fin : {budget.end_date.toLocaleDateString()}
           </div>
         </div>
       </div>
 
       <div className="stat border-none p-2">
         <div className="text-white">
-          <div className="font-semibold mb-2">Montant Dépensé : {spentAmount.toLocaleString()}€</div>
+          <div className="font-semibold mb-2">
+            Montant Dépensé : {budget.totalSpent}€
+          </div>
         </div>
         <div className="bg-gray-700 rounded-full h-6 mt-4 sm:mt-0">
           <div
-            className={`bg-primary h-full rounded-full text-center text-white font-bold`}
+            className={`bg-primary h-full rounded-full text-center`}
             style={{ width: `${percentageUsed}%` }}
-          >
+          ></div>
+          <div className="relative w-full flex justify-center bottom-6 text-white font-bold">
             {percentageUsed.toFixed(2)}%
           </div>
         </div>
