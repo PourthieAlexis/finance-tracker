@@ -15,7 +15,7 @@ export async function getBalanceChartData(): Promise<ChartData> {
       },
     },
     orderBy: {
-      date: "asc",
+      date: "desc",
     },
     include: {
       Account: true,
@@ -25,25 +25,31 @@ export async function getBalanceChartData(): Promise<ChartData> {
   const monthlyBalances: Record<string, number> = {};
 
   transactions.forEach((transaction) => {
-    const monthYear = `${transaction.date.getFullYear()}-${
-      transaction.date.getMonth() + 1
-    }`;
+    const year = transaction.date.getFullYear();
+    const month = transaction.date.getMonth() + 1;
+    const monthYear = `${year}-${month.toString().padStart(2, '0')}`;
+  
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const currentMonthYear = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+  
 
-    if (!monthlyBalances[monthYear]) {
-      if (Object.keys(monthlyBalances).length === 0) {
-        monthlyBalances[monthYear] = transaction.Account.balance;
-      } else {
-        const previousMonth = Object.keys(monthlyBalances).sort().slice(-1)[0];
-        monthlyBalances[monthYear] = monthlyBalances[previousMonth];
-      }
+    if (monthYear === currentMonthYear) {
+      monthlyBalances[monthYear] = transaction.Account.balance;
+      return;
     }
-
+  
+    if (!monthlyBalances[monthYear]) {
+      const previousMonth = Object.keys(monthlyBalances).sort().slice(0, 1)[0];
+      monthlyBalances[monthYear] = monthlyBalances[previousMonth];
+    }
+  
     switch (transaction.transaction_type) {
       case "INCOME":
-        monthlyBalances[monthYear] += transaction.amount;
+        monthlyBalances[monthYear] -= transaction.amount;
         break;
       case "EXPENSE":
-        monthlyBalances[monthYear] -= transaction.amount;
+        monthlyBalances[monthYear] += transaction.amount;
         break;
       case "TRANSFER":
         break;
@@ -86,18 +92,12 @@ export async function getTransactionsChartData(): Promise<ChartData> {
 
   const categoryTotals: Record<string, number> = {};
 
-  transactions.forEach((transaction) => {
-    const category = transaction.category;
-    const amount =
-      transaction.transaction_type === "EXPENSE" ? transaction.amount : 0;
-
-    if (!categoryTotals[category]) {
-      categoryTotals[category] = 0;
+  transactions.forEach(({ category, transaction_type, amount }) => {
+    if (transaction_type === 'EXPENSE') {
+      categoryTotals[category] = (categoryTotals[category] || 0) + amount;
     }
-
-    categoryTotals[category] += amount;
   });
-
+  
   const labels = Object.keys(categoryTotals);
   const dataPoints = Object.values(categoryTotals);
 

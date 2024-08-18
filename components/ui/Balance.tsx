@@ -3,8 +3,9 @@ import React from "react";
 
 const Balance: React.FC = async () => {
   const balance = await getAccountBalanceAndChange(
-    "7008acf8-fc0d-46d8-847e-09ac449bddc3"
+    "2ae1aa92-361e-427e-8d2f-2fef598a51f1"
   );
+  
   return (
     <div className="stats shadow bg-neutral w-full h-full">
       <div className="stat">

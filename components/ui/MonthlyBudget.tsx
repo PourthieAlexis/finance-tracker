@@ -2,7 +2,7 @@ import { getBudget } from "@/app/actions/budget.actions";
 import React from "react";
 
 const MonthlyBudget: React.FC = async () => {
-  const budget = await getBudget("7008acf8-fc0d-46d8-847e-09ac449bddc3");
+  const budget = await getBudget("2ae1aa92-361e-427e-8d2f-2fef598a51f1");
 
   if (!budget) {
     return (

@@ -39,7 +39,7 @@ export async function getAccountBalanceAndChange(userId: string) {
       lastMonthBalance += transaction.amount;
     }
   });
-
+  
   const balanceChangePercentage =
     lastMonthBalance > 0
       ? ((currentBalance - lastMonthBalance) / lastMonthBalance) * 100

@@ -7,3 +7,4 @@ declare interface ChartData {
   labels: string[];
   dataPoints: number[];
 }
+
