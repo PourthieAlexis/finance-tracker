@@ -1,49 +1,55 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Line } from "@/lib/chart";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import { getBalanceChartData } from "@/app/actions/chart.actions";
+import { useAccount } from "@/contexts/AccountContext";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+const BalanceChart: React.FC = () => {
+  const [chartData, setChartData] = useState<any>(null);
+  const { selectedAccount } = useAccount();
 
-const BalanceChart: React.FC = async () => {
-  const { labels, dataPoints } = await getBalanceChartData();
+  useEffect(() => {
+    const getBalanceChart = async () => {
+      if (selectedAccount) {
+        const { labels, dataPoints } = await getBalanceChartData(
+          selectedAccount
+        );
+        if (labels.length > 0 && dataPoints.length > 0) {
+          setChartData({
+            labels,
+            datasets: [
+              {
+                label: "Solde Total (€)",
+                data: dataPoints,
+                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+              },
+            ],
+          });
+        } else {
+          setChartData(null);
+        }
+      }
+    };
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Solde Total (€)",
-        data: dataPoints,
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-      },
-    ],
-  };
-
-  const options = {
-    maintainAspectRatio: false,
-  };
+    getBalanceChart();
+  }, [selectedAccount]);
 
   return (
-    <div className="bg-neutral p-6 rounded-box justify-center flex relative h-full ">
-      <Line data={data} options={options} />
+    <div className="bg-neutral p-6 rounded-box justify-center flex relative h-full">
+      {chartData && chartData.datasets ? (
+        <Line
+          data={chartData}
+          options={{
+            maintainAspectRatio: false,
+          }}
+        />
+      ) : (
+        <div className="flex justify-center items-center h-full w-full text-white">
+          No data available
+        </div>
+      )}
     </div>
   );
 };
