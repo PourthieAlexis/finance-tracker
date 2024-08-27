@@ -13,16 +13,16 @@ export default function AddBudgetForm() {
       className="p-6 bg-neutral rounded-lg shadow-md space-y-4"
       action={formAction}
     >
-      <h2 className="text-2xl font-bold text-white">Ajouter un budget</h2>
+      <h2 className="text-2xl font-bold text-white">Add a Budget</h2>
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Catégorie</span>
+          <span className="label-text text-white">Category</span>
         </label>
         <input
           name="category"
           type="text"
-          placeholder="Ex: Alimentation"
+          placeholder="E.g., Food"
           className="input input-bordered w-full"
         />
         {state.errors?.category &&
@@ -35,12 +35,12 @@ export default function AddBudgetForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Montant</span>
+          <span className="label-text text-white">Amount</span>
         </label>
         <input
           name="amount"
           type="number"
-          placeholder="Ex: 5000"
+          placeholder="E.g., 5000"
           className="input input-bordered w-full"
         />
         {state.errors?.amount &&
@@ -53,7 +53,7 @@ export default function AddBudgetForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Date de début</span>
+          <span className="label-text text-white">Start Date</span>
         </label>
         <input
           name="startDate"
@@ -70,7 +70,7 @@ export default function AddBudgetForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Date de fin</span>
+          <span className="label-text text-white">End Date</span>
         </label>
         <input
           name="endDate"
@@ -86,7 +86,7 @@ export default function AddBudgetForm() {
       </div>
 
       <button type="submit" className="btn btn-primary w-full">
-        Ajouter
+        Add
       </button>
     </form>
   );

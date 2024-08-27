@@ -1,36 +1,22 @@
 "use client";
-import { getBankAccount } from "@/app/actions/account.actions";
 import { createTransaction } from "@/app/actions/transaction.actions";
 import { useAccount } from "@/contexts/AccountContext";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import useSWR from "swr";
 
 const initialState = { message: "", errors: {} };
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function AddTransactionForm() {
   const [state, formAction] = useFormState(createTransaction, initialState);
-  const [accounts, setAccounts] = useState<
-    { id: string; account_name: string }[]
-  >([]);
-  const router = useRouter();
+
   const { selectedAccount, setSelectedAccount } = useAccount();
 
-  useEffect(() => {
-    const getAccounts = async () => {
-      const accounts = await getBankAccount();
-      if (accounts) {
-        setAccounts(accounts);
-        if (!selectedAccount) {
-          setSelectedAccount(accounts[0].id);
-        }
-      } else {
-        router.push("/create-account");
-      }
-    };
-
-    getAccounts();
-  }, []);
+  const { data: accounts, isLoading } = useSWR<Account[], boolean>(
+    "/api/accounts",
+    fetcher
+  );
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAccount(e.target.value);
@@ -41,11 +27,11 @@ export default function AddTransactionForm() {
       className="p-6 bg-neutral rounded-lg shadow-md space-y-4"
       action={formAction}
     >
-      <h2 className="text-2xl font-bold text-white">Ajouter une Transaction</h2>
+      <h2 className="text-2xl font-bold text-white">Add a Transaction</h2>
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Type de Transaction</span>
+          <span className="label-text text-white">Transaction Type</span>
         </label>
         <select
           name="transaction_type"
@@ -64,12 +50,12 @@ export default function AddTransactionForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Contexte</span>
+          <span className="label-text text-white">Category</span>
         </label>
         <input
           name="category"
           type="text"
-          placeholder="Ex: Alimentation"
+          placeholder="E.g., Food"
           className="input input-bordered w-full"
         />
         {state.errors?.category &&
@@ -82,12 +68,12 @@ export default function AddTransactionForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Montant (€)</span>
+          <span className="label-text text-white">Amount (€)</span>
         </label>
         <input
           name="amount"
           type="number"
-          placeholder="Ex: 10"
+          placeholder="E.g., 10"
           className="input input-bordered w-full"
         />
         {state.errors?.amount &&
@@ -100,19 +86,26 @@ export default function AddTransactionForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Compte</span>
+          <span className="label-text text-white">Account</span>
         </label>
         <select
           name="account_id"
           className="select select-bordered w-full"
-          value={selectedAccount || ""}
+          value={selectedAccount || "loading"}
           onChange={handleAccountChange}
         >
-          {accounts.map((account) => (
-            <option key={account.id} value={account.id}>
-              {account.account_name}
+          {isLoading ? (
+            <option value="loading" disabled>
+              Loading...
             </option>
-          ))}
+          ) : (
+            accounts &&
+            accounts.map((account) => (
+              <option key={account.id} value={account.id}>
+                {account.account_name}
+              </option>
+            ))
+          )}
         </select>
         {state.errors?.account_id &&
           state.errors.account_id.map((error: string) => (
@@ -122,7 +115,6 @@ export default function AddTransactionForm() {
           ))}
       </div>
 
-      {/* Description */}
       <div className="form-control">
         <label className="label">
           <span className="label-text text-white">Description</span>
@@ -142,7 +134,7 @@ export default function AddTransactionForm() {
       </div>
 
       <button type="submit" className="btn btn-primary w-full">
-        Ajouter
+        Add
       </button>
     </form>
   );

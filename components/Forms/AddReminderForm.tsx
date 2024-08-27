@@ -6,7 +6,7 @@ import { useFormState } from "react-dom";
 
 const initialState = { message: "", errors: {} };
 
-export default function AddBudgetForm() {
+export default function AddReminderForm() {
   const [state, formAction] = useFormState(createReminder, initialState);
   const [priority, setPriority] = useState<"LOW" | "NORMAL" | "HIGH">("NORMAL");
 
@@ -15,7 +15,7 @@ export default function AddBudgetForm() {
       className="p-6 bg-neutral rounded-lg shadow-md space-y-4"
       action={formAction}
     >
-      <h2 className="text-2xl font-bold text-white">Ajouter un Rappel</h2>
+      <h2 className="text-2xl font-bold text-white">Add a Reminder</h2>
 
       <div className="form-control">
         <label className="label">
@@ -24,7 +24,7 @@ export default function AddBudgetForm() {
         <input
           type="text"
           name="text"
-          placeholder="Nouveau rappel"
+          placeholder="New reminder"
           className="input input-bordered w-full"
         />
         {state.errors?.text &&
@@ -37,7 +37,7 @@ export default function AddBudgetForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Priorité</span>
+          <span className="label-text text-white">Priority</span>
         </label>
         <select
           value={priority}
@@ -47,8 +47,8 @@ export default function AddBudgetForm() {
           }
           className="select select-bordered w-full"
         >
-          <option value="LOW">Pas urgent</option>
-          <option value="NORMAL">Moyen</option>
+          <option value="LOW">Not Urgent</option>
+          <option value="NORMAL">Medium</option>
           <option value="HIGH">Urgent</option>
         </select>
         {state.errors?.priority &&
@@ -61,7 +61,7 @@ export default function AddBudgetForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Date d'échéance</span>
+          <span className="label-text text-white">Due Date</span>
         </label>
         <input
           name="dueDate"
@@ -77,7 +77,7 @@ export default function AddBudgetForm() {
       </div>
 
       <button type="submit" className="btn btn-primary w-full">
-        Ajouter
+        Add
       </button>
     </form>
   );

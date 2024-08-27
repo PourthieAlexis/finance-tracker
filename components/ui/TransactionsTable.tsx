@@ -1,26 +1,47 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { getTransactionsTable } from "@/app/actions/transaction.actions";
+
+import React from "react";
+import useSWR from "swr";
 import { useAccount } from "@/contexts/AccountContext";
 
+const fetchTransactions = async (accountId: string) => {
+  const response = await fetch(`/api/accounts/${accountId}/transaction`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch transactions");
+  }
+  return response.json();
+};
+
 const TransactionsTable: React.FC = () => {
-  const [transactions, setTransactions] = useState<any[]>([]);
   const { selectedAccount } = useAccount();
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (selectedAccount) {
-        const transactions = await getTransactionsTable(selectedAccount);
-        setTransactions(transactions);
-      }
-    };
+  const {
+    data: transactions,
+    error,
+    isLoading,
+  } = useSWR(["/api/accounts/transaction", selectedAccount], () =>
+    fetchTransactions(selectedAccount!)
+  );
 
-    fetchTransactions();
-  }, [selectedAccount]);
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full w-full text-white bg-neutral rounded-box">
+        <div className="loading loading-spinner loading-md"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-white flex justify-center items-center h-full bg-neutral rounded-box">
+        Failed to load transactions
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto bg-neutral rounded-box col-span-2 w-full h-full">
-      {transactions.length > 0 ? (
+      {transactions && transactions.length > 0 ? (
         <table className="table">
           <thead>
             <tr>
@@ -31,7 +52,7 @@ const TransactionsTable: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction, index) => (
+            {transactions.map((transaction: any, index: number) => (
               <tr key={index}>
                 <td>{transaction.transaction_type}</td>
                 <td>

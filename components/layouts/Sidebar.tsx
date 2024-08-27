@@ -3,15 +3,17 @@
 import { useAccount } from "@/contexts/AccountContext";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import { getBankAccount } from "@/app/actions/account.actions";
-import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+import { usePathname } from "next/navigation";
 import { GrTransaction } from "react-icons/gr";
 import { FaClock, FaHome } from "react-icons/fa";
 import { TbPigMoney } from "react-icons/tb";
 import { MdAccountBalance } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiLogOut } from "react-icons/bi";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Sidebar({
   children,
@@ -20,24 +22,8 @@ export default function Sidebar({
 }>) {
   const { data: session } = useSession();
   const { selectedAccount, setSelectedAccount } = useAccount();
-  const router = useRouter();
   const pathname = usePathname();
-  const [accounts, setAccounts] = useState<
-    { id: string; account_name: string }[]
-  >([]);
-
-  useEffect(() => {
-    const getAccounts = async () => {
-      const accounts = await getBankAccount();
-      if (accounts) {
-        setAccounts(accounts);
-      } else {
-        router.push("/create-account");
-      }
-    };
-
-    getAccounts();
-  }, []);
+  const { data: accounts } = useSWR("/api/accounts", fetcher);
 
   const navLinks = [
     {
@@ -100,11 +86,14 @@ export default function Sidebar({
               <option value="" disabled>
                 -- Select an account --
               </option>
-              {accounts.map((account) => (
-                <option key={account.id} value={account.id}>
-                  {account.account_name}
-                </option>
-              ))}
+              {accounts &&
+                accounts.map(
+                  (account: { id: string; account_name: string }) => (
+                    <option key={account.id} value={account.id}>
+                      {account.account_name}
+                    </option>
+                  )
+                )}
             </select>
           </div>
           <ul className="menu gap-4 flex-grow flex flex-col justify-center">

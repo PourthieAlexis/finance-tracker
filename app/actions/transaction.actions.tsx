@@ -5,26 +5,6 @@ import { transactionSchema, TransactionState } from "@/types/schema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getTransactionsTable(accountId: string) {
-  const transactions = await prisma.bankTransaction.findMany({
-    where: {
-      account_id: accountId,
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 3,
-    select: {
-      category: true,
-      amount: true,
-      transaction_type: true,
-      date: true,
-    },
-  });
-
-  return transactions;
-}
-
 export async function createTransaction(
   prevState: TransactionState,
   formData: FormData

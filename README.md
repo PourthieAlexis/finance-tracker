@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Finance Tracker
 
-## Getting Started
+**Finance Tracker** est une application de gestion financière personnelle développée avec Next.js. Elle permet de suivre vos dépenses, de gérer vos budgets, de consigner vos transactions, de visualiser les soldes totaux et de définir des rappels.
 
-First, run the development server:
+## Fonctionnalités
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Suivi des Dépenses** : Surveillez et catégorisez vos dépenses quotidiennes.
+- **Gestion des Budgets** : Définissez et gérez des budgets pour différentes catégories.
+- **Soldes Totaux** : Consultez et analysez vos soldes totaux à travers différents comptes.
+- **Rappels** : Définissez des rappels pour les factures à venir, les délais financiers ou les tâches importantes.
+- **Graphiques de Soldes** : Visualisez l'évolution de vos soldes au fil du temps grâce à des graphiques.
+- **Graphiques des Dépenses par Catégorie** : Analysez vos dépenses par catégorie avec des graphiques pour une meilleure compréhension de vos habitudes financières.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Ce projet utilise les technologies et dépendances suivantes :
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **prisma**
+- **chart.js**
+- **next**
+- **next-auth**
+- **react-chartjs-2**
+- **swr**
+- **zod**
+- **typescript**
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+Pour configurer l'application Finance Tracker sur votre machine locale, suivez ces étapes :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prérequis
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Assurez-vous d'avoir les éléments suivants installés :
 
-## Deploy on Vercel
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Étapes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. **Clonez le dépôt :**
+
+   ```bash
+   git clone https://github.com/PourthieAlexis/finance-tracker.git
+   ```
+
+2. **Accédez au répertoire du projet :**
+
+   ```bash
+   cd finance_tracker
+   ```
+
+3. **Installez les dépendances :**
+
+   Avec npm :
+
+   ```bash
+   npm install
+   ```
+
+   Ou avec yarn :
+
+   ```bash
+   yarn install
+   ```
+
+4. **Configurez les variables d'environnement :**
+
+   Créez un fichier `.env.local` à la racine du répertoire et ajoutez vos variables d'environnement. Exemple :
+
+   ```
+   DATABASE_URL=your-database-url
+   AUTH_GITHUB_ID="your-auth-github-id"
+   AUTH_GITHUB_SECRET= "your-auth-github-secret"
+   NEXTAUTH_SECRET=your-next-auth-secret
+   ```
+
+5. **Exécutez l'application :**
+
+   Avec npm :
+
+   ```bash
+   npm run dev
+   ```
+
+   Ou avec yarn :
+
+   ```bash
+   yarn dev
+   ```
+
+6. **Accédez à l'application :**
+
+   Ouvrez votre navigateur et allez sur `http://localhost:3000` pour commencer à utiliser l'application.

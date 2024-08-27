@@ -13,16 +13,16 @@ export default function AddAccountForm() {
       className="p-6 bg-neutral rounded-lg shadow-md space-y-4"
       action={formAction}
     >
-      <h2 className="text-2xl font-bold text-white">Ajouter un compte</h2>
+      <h2 className="text-2xl font-bold text-white">Add an Account</h2>
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Nom du compte</span>
+          <span className="label-text text-white">Account Name</span>
         </label>
         <input
           name="accountName"
           type="text"
-          placeholder="Ex: Epargne"
+          placeholder="E.g., Savings"
           className="input input-bordered w-full"
         />
         {state.errors?.accountName &&
@@ -35,12 +35,12 @@ export default function AddAccountForm() {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text text-white">Solde (€)</span>
+          <span className="label-text text-white">Balance (€)</span>
         </label>
         <input
           name="balance"
           type="number"
-          placeholder="Ex: 3000"
+          placeholder="E.g., 3000"
           className="input input-bordered w-full"
         />
         {state.errors?.balance &&
@@ -52,7 +52,7 @@ export default function AddAccountForm() {
       </div>
 
       <button type="submit" className="btn btn-primary w-full">
-        Ajouter
+        Add
       </button>
     </form>
   );

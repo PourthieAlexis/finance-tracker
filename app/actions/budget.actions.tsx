@@ -6,66 +6,6 @@ import { budgetSchema, BudgetState } from "@/types/schema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getBudget() {
-  const session = await auth();
-  if (!session?.user.id) {
-    redirect("/auth/signin");
-  }
-  const user_id = session.user.id;
-
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-  const budget = await prisma.budget.findFirst({
-    where: {
-      user_id,
-      start_date: {
-        lte: endOfMonth,
-      },
-      end_date: {
-        gte: startOfMonth,
-      },
-    },
-  });
-
-  if (!budget) {
-    return null;
-  }
-
-  const accounts = await prisma.bankAccount.findMany({
-    where: {
-      user_id,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  const accountIds = accounts.map((account) => account.id);
-
-  const totalSpent = await prisma.bankTransaction.aggregate({
-    _sum: {
-      amount: true,
-    },
-    where: {
-      account_id: {
-        in: accountIds,
-      },
-      transaction_type: "EXPENSE",
-      date: {
-        gte: startOfMonth,
-        lte: endOfMonth,
-      },
-    },
-  });
-
-  return {
-    ...budget,
-    totalSpent: totalSpent._sum.amount || 0,
-  };
-}
-
 export async function createBudget(prevState: BudgetState, formData: FormData) {
   const session = await auth();
   if (!session?.user.id) {
